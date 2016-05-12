@@ -9,6 +9,10 @@ import java.awt.*;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
+
+import java.net.*;
+import java.nio.CharBuffer;
+
 /**
  *
  * @author Kornél
@@ -80,8 +84,43 @@ public class TestApplet extends JApplet{
   }
 
   private String getDateUsingHttpText() {
-    // Retrieve the current time using an HTTP text-based connection
-    return "unavailable";
+    try {
+    // Construct a URL referring to the servlet
+    //URL url = new URL(getCodeBase(), "/TestServlet");
+    URL url = new URL("http://localhost:8084/ServletTest-web/TestServlet");
+    // Create a com.oreilly.servlet.HttpMessage to communicate with that URL
+    //HttpMessage msg = new HttpMessage(url);
+
+    // Construct a Properties list to say format=object
+    //Properties props = new Properties();
+    //props.put("format", "object");
+
+    // Send a GET message to the servlet, passing "props" as a query string
+    // Get the response as an ObjectInputStream
+    //InputStream in = msg.sendGetMessage(props);
+    //ObjectInputStream result = new ObjectInputStream(in);
+
+    // Read the Date object from the stream
+    //Object obj = result.readObject();
+    //String kapcsTeszt = (String)obj;
+
+    Reader reader = new InputStreamReader(url.openStream(), "UTF-8");
+    // Return the string representation of the Date
+    String servRead="";
+    int r;
+        while ((r = reader.read()) != -1) {
+            char ch = (char) r;
+            servRead+=ch;
+        }
+//return reader.toString();
+    return servRead;
+  }
+  catch (Exception e) {
+    // If there was a problem, print to System.out
+    // (typically the Java console) and return null
+    e.printStackTrace();
+    return e.toString()+" "+e.getMessage()+" "+ e.getLocalizedMessage();
+  }
   }
 
   private String getDateUsingHttpObject() {
